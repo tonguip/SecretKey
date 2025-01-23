@@ -185,9 +185,11 @@ namespace SecretKey
                 DateTime resultDay = utcPlus7.AddDays(daysToAdd);
                 orgName = ReadNotNullString("Enter the organization name (MyCompany) : ");
                 programName = ReadNotNullString("Enter the program name (MyProgram) : ");
+                string serialNumber = ReadNotNullString("Enter the serial number to validate : ");
+
 
                 try {
-                    string serial = GenerateSecretKey.GenerateSerial(resultDay, "AADOC", "DR172-ADV Viewer", secretKey);
+                    string serial = GenerateSecretKey.GenerateSerial(resultDay, orgName, programName, serialNumber, secretKey);
                     Console.WriteLine($"Generated Serial: {serial}");
                 } catch (Exception ex)
                 {
@@ -235,6 +237,7 @@ namespace SecretKey
                         Console.WriteLine($"\nExpirationDate: {payload.ExpirationDate} let: {(payload.ExpirationDate - utcPlus7).Days}");
                         Console.WriteLine($"OrganizationName: {payload.OrganizationName}");
                         Console.WriteLine($"ProgramName: {payload.ProgramName}");
+                        Console.WriteLine($"SerialNumber: {payload.SerialNumber}");
                     }
                 }
                 catch (Exception ex)

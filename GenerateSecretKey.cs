@@ -17,23 +17,25 @@ namespace SecretKey
             public DateTime ExpirationDate { get; set; }
             public string OrganizationName { get; set; }
             public string ProgramName { get; set; }
+            public string SerialNumber { get; set; }
 
             public override string ToString()
             {
-                return $"{ExpirationDate:O}{DataSeparator}{OrganizationName}{DataSeparator}{ProgramName}";
+                return $"{ExpirationDate:O}{DataSeparator}{OrganizationName}{DataSeparator}{ProgramName}{DataSeparator}{SerialNumber}";
             }
 
             public static Payload FromString(string data)
             {
                 var parts = data.Split(DataSeparator);
-                if (parts.Length != 3)
+                if (parts.Length != 4)
                     throw new FormatException("Invalid payload format");
 
                 return new Payload
                 {
                     ExpirationDate = DateTime.Parse(parts[0]),
                     OrganizationName = parts[1],
-                    ProgramName = parts[2]
+                    ProgramName = parts[2],
+                    SerialNumber = parts[3]
                 };
             }
         }
@@ -74,14 +76,17 @@ namespace SecretKey
         {
             return Obfuscate(input);  // Since XOR is its own inverse
         }
-        public static string GenerateSerial(DateTime expirationDate, string orgName, string programName, string key)
+        public static string GenerateSerial(DateTime expirationDate, string orgName, string programName,string serialNumber, string key)
         {
             var payload = new Payload
             {
                 ExpirationDate = expirationDate,
                 OrganizationName = orgName,
-                ProgramName = programName
+                ProgramName = programName,
+                SerialNumber = serialNumber
             };
+
+            Console.WriteLine(payload);
 
             string serializedPayload = payload.ToString();
             string signature = ComputeSignature(serializedPayload, key);
